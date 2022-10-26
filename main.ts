@@ -70,6 +70,24 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     grid.move(cursor, -1, 0)
     grid.place(shadowCursor, tiles.getTileLocation(grid.spriteCol(cursor) + 1, grid.spriteRow(cursor)))
 })
+function isPlayerXwinned (enemyboats: Sprite[][], hitOrMissPX: Sprite[]) {
+    killCount = 0
+    for (let index = 0; index <= 4; index++) {
+        currentBotBoomCounter = 0
+        for (let currentBoatSprite of enemyboats[index]) {
+            for (let index of hitOrMissPX) {
+                if (grid.spriteRow(currentBoatSprite) == grid.spriteRow(currentBoatSprite) && grid.spriteCol(index) == grid.spriteCol(index)) {
+                    currentBotBoomCounter += 1
+                    break;
+                }
+            }
+        }
+        if (currentBotBoomCounter == enemyboats[index].length) {
+            killCount += 1
+        }
+    }
+    return killCount
+}
 function switchPlayer () {
     if (moveBoatFlag == 2) {
         cursor.setFlag(SpriteFlag.Invisible, false)
@@ -146,7 +164,7 @@ function isHitOrMiss (enemyBoats: Sprite[][], hitOrMissPX: Sprite[]) {
                     `, SpriteKind.Projectile)
                 grid.place(boomSprite, grid.getLocation(cursor))
                 hitOrMissPX.push(boomSprite)
-                game.splash("" + currentPlayer + "   HIT!!")
+                game.splash("" + currentPlayer + "   HIT!!" + convertToText(isPlayerXwinned(enemyBoats, hitOrMissPX)) + "boats destroyed!")
                 return 1
             }
         }
@@ -171,7 +189,7 @@ function isHitOrMiss (enemyBoats: Sprite[][], hitOrMissPX: Sprite[]) {
         `, SpriteKind.Projectile)
     grid.place(boomSprite, grid.getLocation(cursor))
     hitOrMissPX.push(boomSprite)
-    game.splash("" + currentPlayer + "   MISS!!")
+    game.splash("" + currentPlayer + "MISS!!!")
     return 0
 }
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -571,6 +589,8 @@ function isOverlapping (boatSpriteArrayPX: Sprite[][]) {
 }
 let boomSprite: Sprite = null
 let iterator = 0
+let currentBotBoomCounter = 0
+let killCount = 0
 let hitOrMissP2: Sprite[] = []
 let hitOrMissP1: Sprite[] = []
 let boatRotateArrayP2: string[] = []
@@ -608,6 +628,9 @@ cursor = sprites.create(img`
     3 . . . . . . . . . . . . . . 3 
     3 3 3 3 3 . . . . . . 3 3 3 3 3 
     `, SpriteKind.Cursor)
+for (let index = 0; index <= 4; index++) {
+	
+}
 shadowCursor = sprites.create(img`
     ........................
     ........................
